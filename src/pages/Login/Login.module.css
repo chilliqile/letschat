@@ -1,0 +1,29 @@
+.formContainer {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form h1,
+.form p {
+  text-align: center;
+}
+
+.label {
+  display: block;
+}
+
+.input {
+  padding: 0 10px;
+  width: 100%;
+}
+
+.button {
+  width: 100%;
+}
