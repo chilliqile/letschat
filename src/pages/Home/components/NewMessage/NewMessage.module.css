@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+.header button {
+  position: absolute;
+  right: 0;
+}
+
+.input {
+  margin: 10px 10px 10px 0;
+}
+
+.result {
+  display: flex;
+  gap: 10px;
+}
+
+.result:hover {
+  background-color: lightgrey;
+  cursor: pointer;
+}
