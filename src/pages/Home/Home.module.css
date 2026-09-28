@@ -78,6 +78,11 @@
   gap: 10px;
   padding: 8px 5px;
   align-items: center;
+  text-decoration: none;
+}
+
+.messageItem:visited {
+  color: inherit;
 }
 
 .messageItem:hover {
@@ -86,5 +91,6 @@
 
 .active,
 .active:hover {
+  color: inherit;
   background-color: #344e82;
 }
