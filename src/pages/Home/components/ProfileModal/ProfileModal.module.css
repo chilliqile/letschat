@@ -1,0 +1,32 @@
+.dialog {
+  max-width: 400px;
+}
+
+.label {
+  display: block;
+}
+
+.field {
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  h1 {
+    text-align: center;
+  }
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.buttonContainer button {
+  width: 60px;
+}

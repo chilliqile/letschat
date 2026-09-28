@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./Home.module.css";
 import { Outlet, NavLink } from "react-router";
+import ProfileModal from "./components/ProfileModal/ProfileModal";
 
 const mockMessages = [
   { username: "sana", avatarUrl: "" },
@@ -9,6 +10,13 @@ const mockMessages = [
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dialogRef = useRef(null);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    dialogRef.current.close();
+  };
 
   useEffect(() => {
     async function fetchMessages() {
@@ -23,12 +31,21 @@ export default function Home() {
     fetchMessages();
   }, []);
 
+  useEffect(() => {
+    if (isModalOpen) {
+      dialogRef.current.showModal();
+    }
+  }, [isModalOpen]);
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.headerContainer}>
         <header className={styles.header}>
           <span className={styles.logo}>LetsChat</span>
-          <div className={styles.profileIcon}></div>
+          <div
+            onClick={() => setIsModalOpen(true)}
+            className={styles.profileIcon}
+          ></div>
         </header>
       </div>
       <div className={styles.main}>
@@ -66,6 +83,7 @@ export default function Home() {
           <Outlet />
         </div>
       </div>
+      {isModalOpen && <ProfileModal ref={dialogRef} onClose={closeModal} />}
     </div>
   );
 }
