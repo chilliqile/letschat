@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styles from "./Home.module.css";
-import { Outlet } from "react-router";
+import { Outlet, NavLink } from "react-router";
 
 const mockMessages = [
   { username: "sana", avatarUrl: "" },
@@ -46,15 +46,19 @@ export default function Home() {
           </form>
           <div className={styles.messagesPanel}>
             {messages.map((msg) => (
-              <div className={styles.messageItem}>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? `${styles.active} ${styles.messageItem}`
+                    : styles.messageItem
+                }
+                to={`/chats/${msg.username}`}
+              >
                 <div className={styles.profileIcon}>
                   {/* <img src={msg.avatarUrl} /> */}
                 </div>
-                <div className={styles.messageDetails}>
-                  <span>{msg.username}</span>
-                  <span>Some message</span>
-                </div>
-              </div>
+                <span>{msg.username}</span>
+              </NavLink>
             ))}
           </div>
         </div>
