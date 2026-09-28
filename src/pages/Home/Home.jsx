@@ -14,7 +14,7 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNewMessageOpen, setIsNewMessageOpen] = useState(false);
   const newMessageRef = useRef();
-  const dialogRef = useRef(null);
+  const editProfileRef = useRef(null);
 
   const closeNewMessage = () => {
     newMessageRef.current.close();
@@ -23,7 +23,7 @@ export default function Home() {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    dialogRef.current.close();
+    editProfileRef.current.close();
   };
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function Home() {
 
   useEffect(() => {
     if (isModalOpen) {
-      dialogRef.current.showModal();
+      editProfileRef.current.showModal();
     }
   }, [isModalOpen]);
 
@@ -97,7 +97,9 @@ export default function Home() {
           <Outlet />
         </div>
       </div>
-      {isModalOpen && <ProfileModal ref={dialogRef} onClose={closeModal} />}
+      {isModalOpen && (
+        <ProfileModal ref={editProfileRef} onClose={closeModal} />
+      )}
       {isNewMessageOpen && (
         <NewMessage ref={newMessageRef} onClose={closeNewMessage} />
       )}
