@@ -34,10 +34,6 @@ export default function Chat() {
   const [chat, setChat] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  if (!username) {
-    return <p>start a new chat</p>;
-  }
-
   useEffect(() => {
     async function fetchChat() {
       try {
@@ -55,6 +51,10 @@ export default function Chat() {
     }
     fetchChat();
   }, []);
+
+  if (!username) {
+    return <p>start a new chat</p>;
+  }
 
   if (isLoading) {
     return <p>Loading...</p>;
