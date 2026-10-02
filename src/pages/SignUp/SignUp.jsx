@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import styles from "./SignUp.module.css";
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [data, setData] = useState({
     username: "",
     password: "",
@@ -39,16 +40,41 @@ export default function SignUp() {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInput()) return;
-    // handle submit logic
+    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/sign-up`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (res.status === 409) {
+      setErrors({ username: { message: "Username is already in use" } });
+      return;
+    }
+
+    if (res.status === 500) {
+      setErrors({
+        serverError: {
+          message: "A server error occured. Please try again later.",
+        },
+      });
+      return;
+    }
+
+    navigate("/login");
   };
 
   return (
     <div className={styles.formContainer}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h1>Register for LetsChat</h1>
+        {errors.serverError && (
+          <span className={styles.errorMessage}>
+            {errors.serverError.message}
+          </span>
+        )}
         <div>
           <label className={styles.label} htmlFor="username">
             Username
