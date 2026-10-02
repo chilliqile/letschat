@@ -8,16 +8,31 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
   });
-
+  const [errors, setErrors] = useState({});
   const { username, password, confirmPassword } = data;
 
   const validateInput = () => {
-    if (!username) return false;
-    if (!password) return false;
-    if (!confirmPassword) return false;
-    if (password !== confirmPassword) return false;
+    setErrors({});
+    let err = {};
+    if (!username) {
+      err = { username: { message: "Username is required" } };
+    }
+    if (!password) {
+      err = { ...err, password: { message: "Password is required" } };
+    }
+    if (password !== confirmPassword) {
+      err = {
+        ...err,
+        confirmPassword: { message: "Passwords do not match. Please re-enter" },
+      };
+    }
 
-    return true;
+    if (Object.keys(err).length === 0) {
+      return true;
+    } else {
+      setErrors(err);
+      return false;
+    }
   };
 
   const handleChange = (e) => {
@@ -26,7 +41,7 @@ export default function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    validateInput();
+    if (!validateInput()) return;
     // handle submit logic
   };
 
@@ -47,6 +62,11 @@ export default function SignUp() {
             onChange={handleChange}
             required
           />
+          {errors.username && (
+            <span className={styles.errorMessage}>
+              {errors.username.message}
+            </span>
+          )}
         </div>
         <div>
           <label className={styles.label} htmlFor="password">
@@ -61,6 +81,11 @@ export default function SignUp() {
             onChange={handleChange}
             required
           />
+          {errors.password && (
+            <span className={styles.errorMessage}>
+              {errors.password.message}
+            </span>
+          )}
         </div>
         <div>
           <label className={styles.label} htmlFor="confirmPassword">
@@ -75,6 +100,11 @@ export default function SignUp() {
             onChange={handleChange}
             required
           />
+          {errors.confirmPassword && (
+            <span className={styles.errorMessage}>
+              {errors.confirmPassword.message}
+            </span>
+          )}
         </div>
         <button className={styles.button} type="submit">
           Sign Up

@@ -27,3 +27,12 @@
 .button {
   width: 100%;
 }
+
+.errorMessage {
+  display: block;
+  margin: 10px 0;
+  background-color: #ffbaba;
+  color: #a60000;
+  padding: 5px;
+  border-radius: 10px;
+}
