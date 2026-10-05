@@ -8,6 +8,7 @@ export default function Home() {
   const [messages, setMessages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNewMessageOpen, setIsNewMessageOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const newMessageRef = useRef();
   const editProfileRef = useRef(null);
 
@@ -23,6 +24,7 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchMessages() {
+      setIsLoading(true);
       try {
         // fetch message from api
         const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/messages`, {
@@ -34,6 +36,8 @@ export default function Home() {
         setMessages(data);
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchMessages();
@@ -50,6 +54,14 @@ export default function Home() {
       newMessageRef.current.showModal();
     }
   }, [isNewMessageOpen]);
+
+  if (isLoading) {
+    return (
+      <div>
+        <span>Loading...</span>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.pageContainer}>
@@ -110,3 +122,5 @@ export default function Home() {
     </div>
   );
 }
+
+// TODO: search existing conversation list
