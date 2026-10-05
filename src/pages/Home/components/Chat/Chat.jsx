@@ -2,47 +2,32 @@ import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import styles from "./Chat.module.css";
 
-const mockUser = {
-  username: "iamnotakit",
-  avatarUrl: "",
-};
-
-const mockChat = [
-  {
-    username: "iamnotakit",
-    // receiver: "itsqile",
-    message: "hello",
-    sentAt: new Date(),
-  },
-  {
-    username: "itsqile",
-    // receiver: "iamnotakit"
-    message: "hi, it's been a long time",
-    sentAt: new Date(),
-  },
-  {
-    username: "itsqile",
-    // receiver: "iamnotakit"
-    message: "how have you been?",
-    sentAt: new Date(),
-  },
-];
-
 export default function Chat() {
   const { username } = useParams();
-  const [user, setUser] = useState(null);
   const [chat, setChat] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function fetchChat() {
+      setError("");
+      setChat({});
+      setIsLoading(true);
       try {
-        setUser(null);
-        setChat(null);
-        setIsLoading(true);
-        // fetch chat from api
-        setUser(mockUser);
-        setChat(mockChat);
+        const res = await fetch(
+          `${import.meta.env.VITE_SERVER_URL}/messages/${username}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+          },
+        );
+        if (res.status === 404) {
+          setError("User does not exist");
+        }
+
+        const data = await res.json();
+        setChat(data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -50,14 +35,30 @@ export default function Chat() {
       }
     }
     fetchChat();
-  }, []);
-
-  if (!username) {
-    return <p>start a new chat</p>;
-  }
+  }, [username]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <div className={styles.fillerContainer}>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!username) {
+    return (
+      <div className={styles.fillerContainer}>
+        <p>Start a new chat</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.fillerContainer}>
+        <p>User does not exist!</p>
+      </div>
+    );
   }
 
   return (
@@ -66,20 +67,30 @@ export default function Chat() {
         <div className={styles.profileIcon}>
           {/* <img src={user.avatarUrl} /> */}
         </div>
-        <span>{user.username}</span>
+        <span>{username}</span>
       </div>
       <div className={styles.chatLogs}>
         {chat.map((msg) => (
           <div
+            key={msg.id}
             className={`${styles.message}
               ${
-                user.username === msg.username
+                username === msg.sender.username
                   ? styles.contactMessage
                   : styles.selfMessage
               }`}
           >
-            <p>{msg.message}</p>
-            <span className={styles.time}>{msg.sentAt.toLocaleString()}</span>
+            <p>{msg.text}</p>
+            <span className={styles.time}>
+              {new Date(msg.createdAt).toLocaleString(undefined, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+              })}
+            </span>
           </div>
         ))}
       </div>
