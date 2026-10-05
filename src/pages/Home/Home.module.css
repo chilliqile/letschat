@@ -79,6 +79,7 @@
   padding: 8px 5px;
   align-items: center;
   text-decoration: none;
+  color: inherit;
 }
 
 .messageItem:visited {
@@ -93,4 +94,9 @@
 .active:hover {
   color: inherit;
   background-color: #344e82;
+}
+
+.messageDetails {
+  display: flex;
+  flex-direction: column;
 }
