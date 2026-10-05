@@ -4,11 +4,6 @@ import { Outlet, NavLink } from "react-router";
 import ProfileModal from "./components/ProfileModal/ProfileModal";
 import NewMessage from "./components/NewMessage/NewMessage";
 
-const mockMessages = [
-  { username: "sana", avatarUrl: "" },
-  { username: "iamnotakit", avatarUrl: "" },
-];
-
 export default function Home() {
   const [messages, setMessages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,10 +23,15 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchMessages() {
-      setMessages([]);
       try {
         // fetch message from api
-        setMessages(mockMessages);
+        const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/messages`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
+        const data = await res.json();
+        setMessages(data);
       } catch (err) {
         console.error(err);
       }
@@ -78,17 +78,21 @@ export default function Home() {
           <div className={styles.messagesPanel}>
             {messages.map((msg) => (
               <NavLink
+                key={msg.user.id}
                 className={({ isActive }) =>
                   isActive
                     ? `${styles.active} ${styles.messageItem}`
                     : styles.messageItem
                 }
-                to={`/chats/${msg.username}`}
+                to={`/chats/${msg.user.username}`}
               >
                 <div className={styles.profileIcon}>
                   {/* <img src={msg.avatarUrl} /> */}
                 </div>
-                <span>{msg.username}</span>
+                <div className={styles.messageDetails}>
+                  <span>{msg.user.username}</span>
+                  <span className={styles.lastMessage}>{msg.lastMessage}</span>
+                </div>
               </NavLink>
             ))}
           </div>
