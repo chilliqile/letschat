@@ -7,6 +7,10 @@
 
 .chatContainer {
   margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .profileIcon {
@@ -28,6 +32,11 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  flex: 1; /* Fills available space inside panel */
+  min-height: 0; /* Critical to prevent flexbox from forcing growth */
+  overflow-y: auto; /* Enables scrolling when items exceed height */
+  padding: 10px;
 }
 
 .selfMessage {

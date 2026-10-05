@@ -1,6 +1,6 @@
 .pageContainer {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr;
   height: 100vh;
 }
 
@@ -8,7 +8,6 @@
   max-width: 1000px;
   padding: 5px;
   margin: 0 auto;
-  flex: 0 1 auto;
   width: 100%;
 }
 
@@ -33,25 +32,30 @@
 }
 
 .main {
-  flex: 1 1 auto;
   max-width: 1000px;
   margin: 0 auto;
   padding: 5px;
   display: grid;
   grid-template-columns: 1fr 2fr;
   width: 100%;
+  height: 100%; /* Ensures it fills its assigned grid space */
+  overflow: hidden; /* Prevents it from growing beyond its limits */
 }
 
 .leftPanel {
   padding: 5px;
   background-color: #121b2d;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .leftPanelHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 400px;
 
   button {
     width: 36px;
@@ -65,12 +69,15 @@
   width: 100%;
 }
 
-.messagesPanel {
+.messageList {
   margin-top: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   min-height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .messageItem {
@@ -99,4 +106,10 @@
 .messageDetails {
   display: flex;
   flex-direction: column;
+}
+
+.rightPanel {
+  display: grid;
+  min-height: 0;
+  gap: 10px;
 }

@@ -87,7 +87,7 @@ export default function Home() {
               placeholder="Search"
             ></input>
           </form>
-          <div className={styles.messagesPanel}>
+          <div className={styles.messageList}>
             {messages.map((msg) => (
               <NavLink
                 key={msg.user.id}
@@ -109,7 +109,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <div className="rightPanel">
+        <div className={styles.rightPanel}>
           <Outlet />
         </div>
       </div>
