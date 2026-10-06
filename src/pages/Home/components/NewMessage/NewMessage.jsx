@@ -1,18 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import styles from "./NewMessage.module.css";
-const mockResults = [{ username: "Hello", avatarUrl: "" }];
 
 export default function NewMessage({ ref, onClose }) {
   const navigate = useNavigate();
   const [results, setResults] = useState([]);
   const [input, setInput] = useState("");
 
-  const search = (e) => {
+  const search = async (e) => {
     e.preventDefault();
-    // search database
-    // set search results
-    setResults(mockResults);
+    if (!input.trim()) return;
+
+    const params = new URLSearchParams();
+    params.append("username", input);
+    const res = await fetch(
+      `${import.meta.env.VITE_SERVER_URL}/users?${params}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      },
+    );
+    const data = await res.json();
+    setResults(data);
   };
 
   const handleClick = (username) => {
@@ -38,9 +48,10 @@ export default function NewMessage({ ref, onClose }) {
         ></input>
         <button>Search</button>
       </form>
-      <div>
-        {results &&
-          results.map((r, index) => (
+      {results.length > 0 && (
+        <div>
+          <h2>Users</h2>
+          {results.map((r, index) => (
             <div
               className={styles.result}
               key={index}
@@ -50,7 +61,8 @@ export default function NewMessage({ ref, onClose }) {
               <span>{r.username}</span>
             </div>
           ))}
-      </div>
+        </div>
+      )}
     </dialog>
   );
 }
