@@ -12,6 +12,7 @@ export default function Home() {
   const newMessageRef = useRef();
   const editProfileRef = useRef(null);
   const [searchInput, setSearchInput] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
   const displayMessages = searchInput
     ? messages.filter((msg) => {
         if (
@@ -44,7 +45,6 @@ export default function Home() {
     async function fetchMessages() {
       setIsLoading(true);
       try {
-        // fetch message from api
         const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/messages`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -87,9 +87,22 @@ export default function Home() {
         <header className={styles.header}>
           <span className={styles.logo}>LetsChat</span>
           <div
-            onClick={() => setIsModalOpen(true)}
-            className={styles.profileIcon}
-          ></div>
+            onClick={() => setShowDropdown(!showDropdown)}
+            className={`${styles.profileIcon} ${styles.dropdown}`}
+          >
+            {showDropdown && (
+              <ul className={styles.dropdownContent}>
+                <li>
+                  <button onClick={() => setIsModalOpen(true)}>
+                    Edit Profile
+                  </button>
+                </li>
+                <li>
+                  <button>Log Out</button>
+                </li>
+              </ul>
+            )}
+          </div>
         </header>
       </div>
       <div className={styles.main}>

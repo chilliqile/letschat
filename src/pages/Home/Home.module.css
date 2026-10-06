@@ -113,3 +113,34 @@
   min-height: 0;
   gap: 10px;
 }
+
+.dropdown {
+  position: relative;
+}
+
+.dropdownContent {
+  list-style: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 120px;
+  text-align: left;
+  background-color: #1f2636;
+  padding: 0;
+}
+
+.dropdownContent * {
+  width: 100%;
+}
+
+.dropdownContent button {
+  background-color: inherit;
+  color: #fff;
+  border: none;
+  padding: 5px 0;
+  cursor: pointer;
+}
+
+.dropdownContent button:hover {
+  background-color: #1c2231;
+}
