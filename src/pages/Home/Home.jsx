@@ -11,6 +11,20 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const newMessageRef = useRef();
   const editProfileRef = useRef(null);
+  const [searchInput, setSearchInput] = useState("");
+  const displayMessages = searchInput
+    ? messages.filter((msg) => {
+        if (
+          msg.user.username
+            .toLowerCase()
+            .includes(searchInput.toLowerCase().trim()) ||
+          msg.lastMessage
+            .toLowerCase()
+            .includes(searchInput.toLowerCase().trim())
+        )
+          return msg;
+      })
+    : messages;
 
   const closeNewMessage = () => {
     newMessageRef.current.close();
@@ -20,6 +34,10 @@ export default function Home() {
   const closeModal = () => {
     setIsModalOpen(false);
     editProfileRef.current.close();
+  };
+
+  const onInputChange = (e) => {
+    setSearchInput(e.target.value);
   };
 
   useEffect(() => {
@@ -80,15 +98,14 @@ export default function Home() {
             <h1>Messages</h1>
             <button onClick={() => setIsNewMessageOpen(true)}>+</button>
           </div>
-          <form>
-            <input
-              className={styles.search}
-              type="text"
-              placeholder="Search"
-            ></input>
-          </form>
+          <input
+            className={styles.search}
+            type="text"
+            placeholder="Search"
+            onChange={onInputChange}
+          ></input>
           <div className={styles.messageList}>
-            {messages.map((msg) => (
+            {displayMessages.map((msg) => (
               <NavLink
                 key={msg.user.id}
                 className={({ isActive }) =>
@@ -122,5 +139,3 @@ export default function Home() {
     </div>
   );
 }
-
-// TODO: search existing conversation list
