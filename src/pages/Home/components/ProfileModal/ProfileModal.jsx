@@ -1,13 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./ProfileModal.module.css";
 
 export default function ProfileModal({ ref, onClose }) {
-  // profile: {avatar, username, bio}
-  // fetch profile details, from context or from api
+  const [error, setError] = useState("");
+  const [user, setUser] = useState({ username: "", bio: "" });
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    async function getUser() {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/profile`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const data = await res.json();
+      setUser(data);
+    }
+    getUser();
+  }, []);
+
+  const onInputChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // handle submit logic
+
+    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/profile`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(user),
+    });
+
+    if (res.status === 400) {
+      setError("Username is required");
+      return;
+    }
+
+    if (res.status === 409) {
+      setError("Username is already in use");
+      return;
+    }
+
+    if (!res.ok) {
+      setError("An error has occured. Please try again later.");
+      return;
+    }
+
     onClose();
   };
 
@@ -26,12 +65,26 @@ export default function ProfileModal({ ref, onClose }) {
         </div>
         <div>
           <label className={styles.label}>Username</label>
-          <input className={styles.field} type="text" required />
+          <input
+            className={styles.field}
+            type="text"
+            name="username"
+            value={user.username}
+            onChange={onInputChange}
+            required
+          />
         </div>
         <div>
           <label className={styles.label}>Bio</label>
-          <input className={styles.field} type="text" />
+          <input
+            className={styles.field}
+            type="text"
+            name="bio"
+            value={user.bio}
+            onChange={onInputChange}
+          />
         </div>
+        {error && <span className={styles.error}>{error}</span>}
         <div className={styles.buttonContainer}>
           <button type="button" onClick={onClose}>
             Cancel

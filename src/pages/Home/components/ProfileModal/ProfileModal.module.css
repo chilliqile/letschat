@@ -30,3 +30,8 @@
 .buttonContainer button {
   width: 60px;
 }
+
+.error {
+  margin-top: 10px;
+  color: #d62222;
+}
