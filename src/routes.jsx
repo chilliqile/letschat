@@ -3,6 +3,7 @@ import SignUp from "./pages/SignUp/SignUp";
 import Home from "./pages/Home/Home";
 import Chat from "./pages/Home/components/Chat/Chat";
 import RootRedirect from "./pages/Root/RootRedirect";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const routes = [
   {
@@ -19,7 +20,11 @@ const routes = [
   },
   {
     path: "/chats",
-    element: <Home />,
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    ),
     children: [
       { index: true, element: <Chat /> },
       { path: "/chats/:username", element: <Chat /> },
