@@ -3,9 +3,11 @@ import styles from "./Home.module.css";
 import { Outlet, NavLink, useNavigate } from "react-router";
 import ProfileModal from "./components/ProfileModal/ProfileModal";
 import NewMessage from "./components/NewMessage/NewMessage";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Home() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [messages, setMessages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNewMessageOpen, setIsNewMessageOpen] = useState(false);
@@ -43,15 +45,8 @@ export default function Home() {
   };
 
   const handleLogout = async () => {
-    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
-
-    if (res.ok) {
-      navigate("/login");
-    }
+    await logout();
+    navigate("/login");
   };
 
   useEffect(() => {

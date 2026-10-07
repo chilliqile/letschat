@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import styles from "./Login.module.css";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const unameChange = (e) => {
     setUsername(e.target.value);
@@ -18,16 +20,10 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // handle submit logic
-    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-      credentials: "include",
-    });
+    const res = await login(username, password);
 
-    if (res.status === 401) {
-      setError("Invalid username or password");
+    if (!res.success) {
+      setError(res.error);
       return;
     }
 
