@@ -34,7 +34,13 @@ export default function Chat() {
         setIsLoading(false);
       }
     }
-    fetchChat();
+    if (username) {
+      fetchChat();
+    } else {
+      setError("");
+      setChat({});
+      setIsLoading(false);
+    }
   }, [username]);
 
   const handleSubmit = async (e) => {
