@@ -45,7 +45,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInput()) return;
-    const res = apiFetch(`${import.meta.env.VITE_SERVER_URL}/sign-up`, {
+    const res = await apiFetch("/sign-up", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
