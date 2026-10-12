@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import styles from "./NewMessage.module.css";
+import useApi from "../../../../hooks/useApiFetch";
 
 export default function NewMessage({ ref, onClose }) {
+  const apiFetch = useApi();
   const navigate = useNavigate();
   const [results, setResults] = useState([]);
   const [input, setInput] = useState("");
@@ -13,14 +15,10 @@ export default function NewMessage({ ref, onClose }) {
 
     const params = new URLSearchParams();
     params.append("username", input);
-    const res = await fetch(
-      `${import.meta.env.VITE_SERVER_URL}/users?${params}`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      },
-    );
+    const res = await apiFetch(`/users?${params}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
     const data = await res.json();
     setResults(data);
   };

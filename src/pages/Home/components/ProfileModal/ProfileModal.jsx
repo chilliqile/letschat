@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import styles from "./ProfileModal.module.css";
+import useApi from "../../../../hooks/useApiFetch";
 
 export default function ProfileModal({ ref, onClose }) {
+  const apiFetch = useApi();
   const [error, setError] = useState("");
   const [user, setUser] = useState({ username: "", bio: "" });
 
   useEffect(() => {
     async function getUser() {
-      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/profile`, {
+      const res = await apiFetch(`/profile`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
       });
       const data = await res.json();
       setUser(data);
@@ -25,10 +26,9 @@ export default function ProfileModal({ ref, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/profile`, {
+    const res = await apiFetch("/profile`", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
       body: JSON.stringify(user),
     });
 

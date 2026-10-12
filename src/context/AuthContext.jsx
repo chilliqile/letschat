@@ -6,6 +6,7 @@ export default function AuthProvider({ children }) {
     isAuthenticated: false,
     isLoading: true,
   });
+
   useEffect(() => {
     async function checkAuthentication() {
       const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/auth/me`, {
@@ -20,6 +21,11 @@ export default function AuthProvider({ children }) {
     }
     checkAuthentication();
   }, []);
+
+  const handleSessionExpired = () => {
+    alert("Session has expired, please log in again.");
+    setAuthState({ isAuthenticated: false, isLoading: false });
+  };
 
   const login = async (username, password) => {
     const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/auth/login`, {
@@ -48,7 +54,9 @@ export default function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ ...authState, login, logout }}>
+    <AuthContext.Provider
+      value={{ ...authState, login, logout, handleSessionExpired }}
+    >
       {children}
     </AuthContext.Provider>
   );

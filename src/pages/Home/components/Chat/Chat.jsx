@@ -1,8 +1,10 @@
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import styles from "./Chat.module.css";
+import useApi from "../../../../hooks/useApiFetch";
 
 export default function Chat() {
+  const apiFetch = useApi();
   const { username } = useParams();
   const [chat, setChat] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -14,14 +16,10 @@ export default function Chat() {
       setChat({});
       setIsLoading(true);
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_SERVER_URL}/messages/${username}`,
-          {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-          },
-        );
+        const res = await apiFetch(`/messages/${username}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
         if (res.status === 404) {
           setError("User does not exist");
         }
@@ -54,15 +52,11 @@ export default function Chat() {
       return;
     }
 
-    const res = await fetch(
-      `${import.meta.env.VITE_SERVER_URL}/messages/${username}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
-        credentials: "include",
-      },
-    );
+    const res = await apiFetch(`/messages/${username}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
 
     if (res.status === 400) {
       alert("Text cannot be empty");

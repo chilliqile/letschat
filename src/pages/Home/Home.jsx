@@ -4,9 +4,11 @@ import { Outlet, NavLink, useNavigate } from "react-router";
 import ProfileModal from "./components/ProfileModal/ProfileModal";
 import NewMessage from "./components/NewMessage/NewMessage";
 import { useAuth } from "../../context/AuthContext";
+import useApi from "../../hooks/useApiFetch";
 
 export default function Home() {
   const navigate = useNavigate();
+  const apiFetch = useApi();
   const { logout } = useAuth();
   const [messages, setMessages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,10 +55,9 @@ export default function Home() {
     async function fetchMessages() {
       setIsLoading(true);
       try {
-        const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/messages`, {
+        const res = await apiFetch("/messages", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
-          credentials: "include",
         });
         const data = await res.json();
         setMessages(data);

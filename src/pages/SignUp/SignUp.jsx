@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import styles from "./SignUp.module.css";
+import useApi from "../../hooks/useApiFetch";
 
 export default function SignUp() {
+  const apiFetch = useApi();
   const navigate = useNavigate();
   const [data, setData] = useState({
     username: "",
@@ -43,7 +45,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateInput()) return;
-    const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/sign-up`, {
+    const res = apiFetch(`${import.meta.env.VITE_SERVER_URL}/sign-up`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
