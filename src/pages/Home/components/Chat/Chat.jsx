@@ -6,14 +6,14 @@ import useApi from "../../../../hooks/useApiFetch";
 export default function Chat() {
   const apiFetch = useApi();
   const { username } = useParams();
-  const [chat, setChat] = useState({});
+  const [chat, setChat] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     async function fetchChat() {
       setError("");
-      setChat({});
+      setChat([]);
       setIsLoading(true);
       try {
         const res = await apiFetch(`/messages/${username}`, {
@@ -32,11 +32,12 @@ export default function Chat() {
         setIsLoading(false);
       }
     }
+
     if (username) {
       fetchChat();
     } else {
       setError("");
-      setChat({});
+      setChat([]);
       setIsLoading(false);
     }
   }, [username]);
@@ -106,29 +107,30 @@ export default function Chat() {
         <span>{username}</span>
       </div>
       <div className={styles.chatLogs}>
-        {chat.map((msg) => (
-          <div
-            key={msg.id}
-            className={`${styles.message}
+        {chat &&
+          chat.map((msg) => (
+            <div
+              key={msg.id}
+              className={`${styles.message}
               ${
                 username === msg.sender.username
                   ? styles.contactMessage
                   : styles.selfMessage
               }`}
-          >
-            <p>{msg.text}</p>
-            <span className={styles.time}>
-              {new Date(msg.createdAt).toLocaleString(undefined, {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-              })}
-            </span>
-          </div>
-        ))}
+            >
+              <p>{msg.text}</p>
+              <span className={styles.time}>
+                {new Date(msg.createdAt).toLocaleString(undefined, {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                })}
+              </span>
+            </div>
+          ))}
       </div>
       <form onSubmit={handleSubmit} className={styles.sendMessageForm}>
         <input
