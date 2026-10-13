@@ -182,9 +182,9 @@ The backend exposes the following routes:
 
 <table>
     <thead>
-        <th scope="col">Method<th>
-        <th scope="col">Endpoint<th>
-        <th scope="col">Description<th>
+        <th scope="col">Method</th>
+        <th scope="col">Endpoint</th>
+        <th scope="col">Description</th>
     </thead>
     <tbody>
         <tr>
